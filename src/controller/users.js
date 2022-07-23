@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid')
 const { checkEmail, addDataRegister, setStatus, deleteModelUser, getAllUsers } = require('../models/users')
 const commonHelper = require('../helper/common')
 const { generateToken, generateRefreshToken } = require('../helper/auth')
-const { sendEmail } = require('../helper/email')
+// const { sendEmail } = require('../helper/email')
 
 const register = async (req, res, next) => {
   try {
@@ -24,11 +24,11 @@ const register = async (req, res, next) => {
       password: hashPassword,
       // phoneNumber: phoneNumber || null,
       // storeName: storeName || null,
-      roleId: 1 /* 'Admin' */
+      roleId: 'customer'
     }
     await addDataRegister(dataRegister)
     delete dataRegister.password
-    sendEmail(email)
+    // sendEmail(email)
     commonHelper.response(res, dataRegister, 201, 'User berhasil ditambahkan')
   } catch (error) {
     console.log(error)
