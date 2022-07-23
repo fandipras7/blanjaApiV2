@@ -3,6 +3,12 @@ const modelProducts = require('../models/product')
 const { response } = require('../helper/common')
 const modelsProduct = require('../models/product')
 const errorMessage = new createError.InternalServerError()
+const cloudinary = require('cloudinary').v2
+cloudinary.config({
+  cloud_name: 'dbpfwb5ok',
+  api_key: '117781545328253',
+  api_secret: '1nAdMge0mf1KjuDwJi8CWPWpHx8'
+})
 // const client = require('../config/redis')
 
 const productsController = {
@@ -61,66 +67,79 @@ const productsController = {
       next(errorMessage)
     }
   },
-  addData: (req, res, next) => {
-    // const type = req.file.originalname
-    // const sizePhoto = req.file.size
-    console.log('apakah ini jalan')
-    // req.file
-    const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
-    const { name, brand, size, color, condition, stock, price, idCategory, description } = req.body
-    console.log(name)
-    const data = {
-      name,
-      brand: brand || '',
-      size: size || '',
-      color: color || '',
-      photo,
-      description: description || '',
-      condition,
-      stock,
-      price,
-      idCategory: idCategory || 2
-    }
-
-    // if (type.includes('.jpg') || type.includes('.png')) {
-    //   photo = req.file.filename
-    // } else {
-    //   return response(res, null, 400, 'file harus jpg atau png')
-    // }
-
-    // if (sizePhoto > 2000000) {
-    //   return next(createError('Maksimal size 2mb'))
-    // }
-
-    modelProducts.insert(data)
-      .then(() => {
-        response(res, data, 201, 'Produk berhasil ditambahkan')
-      })
-      .catch((error) => {
-        console.log(error)
-        next(errorMessage)
-      })
-  },
-  updateData: async (req, res, next) => {
+  addData: async (req, res, next) => {
     try {
-      const id = req.params.id
-      const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
-      const { name, brand, size, color, condition, description, stock, price, idCategory } = req.body
-      console.log(req.body)
+      // const type = req.file.originalname
+    // const sizePhoto = req.file.size
+    // console.log('apakah ini jalan')
+    // console.log(req.files)
+    // const photos = req.files.map((item) => {
+    //   return `http://${req.get('host')}/img/${item.filename}`
+    // })
+
+      // console.log('isi dari photos')
+      // console.log(photos.join(','))
+      // const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
+      const photo = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/product' })
+      const { name, brand, size, color, condition, stock, price, idCategory, description } = req.body
+      console.log(name)
       const data = {
         name,
         brand: brand || '',
         size: size || '',
         color: color || '',
-        condition: condition || '',
+        photo: photo.secure_url,
         description: description || '',
+        condition,
         stock,
         price,
-        photo,
-        idCategory: idCategory || 3,
+        idCategory: idCategory || 2
+      }
+
+      // if (type.includes('.jpg') || type.includes('.png')) {
+      //   photo = req.file.filename
+      // } else {
+      //   return response(res, null, 400, 'file harus jpg atau png')
+      // }
+
+      // if (sizePhoto > 2000000) {
+      //   return next(createError('Maksimal size 2mb'))
+      // }
+
+      modelProducts.insert(data)
+        .then(() => {
+          response(res, data, 201, 'Produk berhasil ditambahkan')
+        })
+        .catch((error) => {
+          console.log(error)
+          next(errorMessage)
+        })
+    } catch (error) {
+      console.log(error)
+      next(errorMessage)
+    }
+  },
+  updateData: async (req, res, next) => {
+    try {
+      const id = req.params.id
+      // const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
+      const photo = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/product' })
+      const { name, brand, size, color, condition, description, stock, price, idCategory } = req.body
+      console.log(req.body)
+      const data = {
+        name,
+        brand,
+        size,
+        color,
+        condition,
+        description,
+        stock,
+        price,
+        photo: photo.secure_url,
+        idCategory,
         id
       }
-      console.log(data);
+      // console.log(data)
       const result = await modelProducts.update(data)
       if (result.rowCount) {
         response(res, data, 201, 'Data berhasil di update')

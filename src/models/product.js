@@ -20,8 +20,12 @@ const modelsProduct = {
     return pool.query('INSERT INTO products(name, brand, size, color, condition, stock, price, id_category, photo, description)VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [name, brand, size, color, condition, stock, price, idCategory, photo, description])
   },
   update: ({ name, brand, size, color, condition, description, stock, price, idCategory, photo, id }) => {
-    return pool.query(`UPDATE products SET name = $1, brand = $2, size = $3, color = $4,
-    condition = $5, description = $6, stock = $7, price = $8, id_category = $9, photo = $10 WHERE id = $11`, [name, brand, size, color, condition, description, stock, price, idCategory, photo, id])
+    return pool.query(`UPDATE products SET 
+    name = COALESCE($1, name), brand = COALESCE($2, brand), size = COALESCE($3, size), color = COALESCE($4, color),
+    condition = COALESCE($5, condition), description = COALESCE($6, description), stock = COALESCE($7, stock),
+    price = COALESCE($8, price), id_category = COALESCE($9, id_category),
+    photo = COALESCE($10, photo) WHERE id = $11`,
+    [name, brand, size, color, condition, description, stock, price, idCategory, photo, id])
   },
   delete: (id) => {
     return pool.query('DELETE FROM products WHERE id = $1', [id])
