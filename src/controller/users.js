@@ -10,7 +10,7 @@ const { sendEmail } = require('../helper/email')
 
 const register = async (req, res, next) => {
   try {
-    const { name, email, password, roleId } = req.body
+    const { name, email, password /* , phoneNumber, storeName */ } = req.body
     const { rowCount } = await checkEmail(email)
     if (rowCount) {
       return next(createError(403, 'User sudah terdaftar'))
@@ -22,7 +22,9 @@ const register = async (req, res, next) => {
       name,
       email,
       password: hashPassword,
-      roleId: roleId || 'Admin'
+      // phoneNumber: phoneNumber || null,
+      // storeName: storeName || null,
+      roleId: 1 /* 'Admin' */
     }
     await addDataRegister(dataRegister)
     delete dataRegister.password

@@ -14,11 +14,12 @@ app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 
-app.use(xss())
-
 app.use(
   helmet.crossOriginResourcePolicy({ policy: 'cross-origin' })
 )
+
+app.use(xss())
+
 // route
 app.use('/v1', mainRoute)
 

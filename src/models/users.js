@@ -11,7 +11,7 @@ const checkEmail = (email) => {
   })
 }
 
-const addDataRegister = ({ id, name, email, password, roleId }) => {
+const addDataRegister = ({ id, name, email, password, roleId /*, phoneNumber, storeName */ }) => {
   return new Promise((resolve, reject) => {
     pool.query('INSERT INTO users(id, name, email, password, role_id)VALUES($1, $2, $3, $4, $5)', [id, name, email, password, roleId], (err, result) => {
       if (!err) {

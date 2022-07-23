@@ -11,3 +11,5 @@ CREATE TABLE users(
 );
 
 ALTER TABLE users ADD COLUMN status VARCHAR(32);
+ALTER TABLE users ADD COLUMN phone_number VARCHAR(32);
+ALTER TABLE users ADD COLUMN store_name VARCHAR(32);

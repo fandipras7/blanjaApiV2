@@ -7,8 +7,9 @@ const errorMessage = new createError.InternalServerError()
 
 const productsController = {
   getData: async (req, res, next) => {
-    console.log('apakah ini jalan2')
+    console.log('apakah ini jalan3')
     const id = req.params.idProduct
+    console.log(id)
     try {
       if (!id) {
         const query = req.query
@@ -17,7 +18,7 @@ const productsController = {
         const sortby = req.query.sortby
         const sort = req.query.sort
         const page = parseInt(req.query.page) || 1
-        const limit = parseInt(req.query.limit) || 3
+        const limit = parseInt(req.query.limit) || 10
         const offset = (page - 1) * limit
         let result = await modelProducts.select(limit, offset)
 
@@ -52,6 +53,7 @@ const productsController = {
       console.log('apakah ini jalan')
 
       const { rows: [product] } = await modelProducts.selectById(id)
+      console.log(product)
       // client.setEx(`produk/${id}`, 60 * 60, JSON.stringify(product))
       response(res, product, 200, 'Berhasil mengambil data dari database')
     } catch (error) {
@@ -64,7 +66,7 @@ const productsController = {
     // const sizePhoto = req.file.size
     console.log('apakah ini jalan')
     // req.file
-    // const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
+    const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
     const { name, brand, size, color, condition, stock, price, idCategory, description } = req.body
     console.log(name)
     const data = {
@@ -72,7 +74,7 @@ const productsController = {
       brand: brand || '',
       size: size || '',
       color: color || '',
-      photo: null,
+      photo,
       description: description || '',
       condition,
       stock,
@@ -102,21 +104,23 @@ const productsController = {
   updateData: async (req, res, next) => {
     try {
       const id = req.params.id
-      // const photo = `http://${req.get('host')}/img/${req.files.filename}` || null
+      const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
       const { name, brand, size, color, condition, description, stock, price, idCategory } = req.body
+      console.log(req.body)
       const data = {
         name,
         brand: brand || '',
         size: size || '',
         color: color || '',
-        condition,
-        description,
+        condition: condition || '',
+        description: description || '',
         stock,
         price,
-        photo: null,
+        photo,
         idCategory: idCategory || 3,
         id
       }
+      console.log(data);
       const result = await modelProducts.update(data)
       if (result.rowCount) {
         response(res, data, 201, 'Data berhasil di update')
