@@ -23,6 +23,7 @@ const categoryController = {
     console.log(data)
     categoryModels.insertCategory(data)
       .then(() => {
+        // console.log(result);
         response(res, data, 201, 'Berhasil menambahkan produk')
       })
       .catch((error) => {

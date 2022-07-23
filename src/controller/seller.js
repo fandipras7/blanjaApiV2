@@ -23,10 +23,11 @@ const sellerRegister = async (req, res, next) => {
       email,
       phoneNumber,
       storeName,
-      roleId: 2,
+      roleId: 'seller',
       password: hashPassword
     }
     await addDataSeller(dataRegister)
+    delete dataRegister.password
     commonHelper.response(res, dataRegister, 201, 'seller berhasil ditambahkan')
   } catch (error) {
     console.log(error)
@@ -38,6 +39,7 @@ const sellerLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const { rows: [user] } = await checkEmail(email)
+    // console.log(user)
     if (!user) {
       return commonHelper.response(res, null, 403, 'email atau password anda salah')
     }
@@ -48,7 +50,7 @@ const sellerLogin = async (req, res, next) => {
     delete user.password
     const payload = {
       email: user.email,
-      role: user.role_id
+      roleid: user.roleid
     }
     // const dataUser = {
     //   name: user.name,
