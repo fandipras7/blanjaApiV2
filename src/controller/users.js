@@ -3,10 +3,16 @@ const errMessage = createError.InternalServerError()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
-const { checkEmail, addDataRegister, setStatus, deleteModelUser, getAllUsers } = require('../models/users')
+const { checkEmail, addDataRegister, setStatus, deleteModelUser, getAllUsers, updateDataUser, updateProfile } = require('../models/users')
 const commonHelper = require('../helper/common')
 const { generateToken, generateRefreshToken } = require('../helper/auth')
 // const { sendEmail } = require('../helper/email')
+const cloudinary = require('cloudinary').v2
+cloudinary.config({
+  cloud_name: 'dbpfwb5ok',
+  api_key: '117781545328253',
+  api_secret: '1nAdMge0mf1KjuDwJi8CWPWpHx8'
+})
 
 const register = async (req, res, next) => {
   try {
@@ -49,6 +55,7 @@ const login = async (req, res, next) => {
     }
     delete user.password
     const payload = {
+      id: user.id,
       email: user.email,
       role: user.role_id
     }
@@ -63,6 +70,26 @@ const login = async (req, res, next) => {
   } catch (error) {
     console.log(error)
     next(new createError.InternalServerError())
+  }
+}
+
+const updateUser = async (req, res, next) => {
+  try {
+    const id = req.user.id
+    // console.log(id)
+    const image = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/user' })
+    const data = {
+      ...req.body,
+      id,
+      photo: image.secure_url
+    }
+    console.log(data)
+    await updateProfile(data)
+    // console.log(result)
+    commonHelper.response(res, data, 200, 'Berhasil merubah data')
+  } catch (error) {
+    console.log(error)
+    next(errMessage)
   }
 }
 
@@ -137,5 +164,6 @@ module.exports = {
   refreshToken,
   activation,
   deleteUser,
-  searchUser
+  searchUser,
+  updateUser
 }

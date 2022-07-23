@@ -35,6 +35,25 @@ const setStatus = (status, email) => {
   })
 }
 
+const updateProfile = ({ id, name, email, phonenumber, gender, birthdate, photo }) =>
+  // eslint-disable-next-line promise/param-names
+  new Promise((resolve, reject) => {
+    return pool.query(`UPDATE users set
+  name = COALESCE($1, name),
+  email = COALESCE($2, email),
+  phonenumber = COALESCE($3, phonenumber),
+  gender = COALESCE($4, gender),
+  birthdate = COALESCE($5, birthdate),
+  photo = COALESCE($6, photo) WHERE id = $7
+  `, [name, email, phonenumber, gender, birthdate, photo, id], (err, result) => {
+      if (!err) {
+        resolve(result)
+      } else {
+        reject(err)
+      }
+    })
+  })
+
 const deleteModelUser = (id) => {
   return new Promise((resolve, reject) => {
     return pool.query('DELETE FROM users WHERE id = $1', [id], (err, result) => {
@@ -64,5 +83,6 @@ module.exports = {
   addDataRegister,
   setStatus,
   deleteModelUser,
-  getAllUsers
+  getAllUsers,
+  updateProfile
 }
