@@ -24,6 +24,23 @@ const addDataSeller = ({ id, name, email, password, phoneNumber, storeName, role
   })
 }
 
+const updateProfile = ({ namestore, email, phonenumber, storedesc, photo, id }) =>
+  new Promise((resolve, reject) => {
+    return pool.query(`UPDATE seller set
+    store_name = COALESCE($1, store_name),
+    email = COALESCE($2, email),
+    phone_number = COALESCE($3, phone_number),
+    storedesc = COALESCE($4, storedesc),
+    photo = COALESCE($5, photo) WHERE id = $6
+    `, [namestore, email, phonenumber, storedesc, photo, id], (err, result) => {
+      if (!err) {
+        resolve(result)
+      } else {
+        reject(err)
+      }
+    })
+  })
+
 const deleteSellerById = (id) => {
   return new Promise((resolve, reject) => {
     return pool.query('DELETE FROM seller WHERE id = $1', [id], (err, result) => {
@@ -48,4 +65,10 @@ const getAllSeller = () => {
   })
 }
 
-module.exports = {checkEmail, addDataSeller, deleteSellerById, getAllSeller}
+module.exports = {
+  checkEmail,
+  addDataSeller,
+  deleteSellerById,
+  getAllSeller,
+  updateProfile
+}

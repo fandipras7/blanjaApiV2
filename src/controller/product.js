@@ -67,6 +67,38 @@ const productsController = {
       next(errorMessage)
     }
   },
+
+  getDataProduct: async (req, res, next) => {
+    try {
+      const page = req.query.page || 1
+      const limit = req.query.limit || 5
+      const offset = (page - 1) * limit
+
+      const { search, sortby, sort } = req.query
+
+      const searchProduct = search || ''
+      const sortbyFilter = sortby || ''
+      const sortFilter = sort || ''
+
+      const result = await modelsProduct.select(limit, offset, searchProduct, sortbyFilter, sortFilter)
+      const { rows: [count] } = await modelsProduct.countProduct(searchProduct, sortbyFilter, sort)
+
+      const totalData = parseInt(count.total)
+      const totalPage = Math.ceil(totalData / limit)
+
+      const pagination = {
+        currentPage: page,
+        limit,
+        totalData,
+        totalPage
+      }
+
+      response(res, result.rows, 200, 'GET PRODUCT SUCCESS', pagination)
+    } catch (error) {
+      console.log(error)
+      next(errorMessage)
+    }
+  },
   addData: async (req, res, next) => {
     try {
       // const type = req.file.originalname

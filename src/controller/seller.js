@@ -1,11 +1,13 @@
 const createError = require('http-errors')
-const { checkEmail, addDataSeller, deleteSellerById, getAllSeller } = require('../models/seller')
+const { checkEmail, addDataSeller, deleteSellerById, getAllSeller, updateProfile } = require('../models/seller')
 const errMessage = createError.InternalServerError()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
 const commonHelper = require('../helper/common')
 const { generateToken, generateRefreshToken } = require('../helper/auth')
+
+const cloudinary = require('../helper/cloudinary')
 
 const sellerRegister = async (req, res, next) => {
   try {
@@ -49,6 +51,7 @@ const sellerLogin = async (req, res, next) => {
     }
     delete user.password
     const payload = {
+      id: user.id,
       email: user.email,
       roleid: user.roleid
     }
@@ -63,6 +66,28 @@ const sellerLogin = async (req, res, next) => {
   } catch (error) {
     console.log(error)
     next(new createError.InternalServerError())
+  }
+}
+
+const updateStore = async (req, res, next) => {
+  try {
+    const id = req.user.id
+    const { namestore, email, phonenumber, storedesc } = req.body
+    const image = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/seller' })
+    const data = {
+      id,
+      namestore,
+      email,
+      phonenumber,
+      storedesc,
+      photo: image.secure_url
+    }
+
+    await updateProfile(data)
+    commonHelper.response(res, data, 201, 'store has been updated')
+  } catch (error) {
+    console.log(error)
+    next(errMessage)
   }
 }
 
@@ -92,7 +117,8 @@ const profileSeller = async (req, res, next) => {
   try {
     const email = req.user.email
     const { rows: [user] } = await checkEmail(email)
-    delete user.password
+    // delete user.password
+    console.log(user)
     commonHelper.response(res, user, 200, 'Berhasil mengambil data')
   } catch (error) {
     console.log(error)
@@ -121,5 +147,6 @@ module.exports = {
   deleteSeller,
   searchSeller,
   profileSeller,
-  refreshToken
+  refreshToken,
+  updateStore
 }

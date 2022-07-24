@@ -62,7 +62,7 @@ const isAdmin = (req, res, next) => {
 }
 
 const isSeller = (req, res, next) => {
-  console.log(req.user);
+  console.log(req.user)
   if (req.user.roleid !== 'seller') {
     return next(createError(400, 'seller Only'))
   }
@@ -70,7 +70,7 @@ const isSeller = (req, res, next) => {
 }
 
 const isUser = (req, res, next) => {
-  if (req.user.roleid !== 'Customer') {
+  if (req.user.roleid !== 'customer') {
     return next(createError(400, 'Customer only'))
   }
   next()
