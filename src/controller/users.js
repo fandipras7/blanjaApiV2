@@ -77,11 +77,11 @@ const updateUser = async (req, res, next) => {
   try {
     const id = req.user.id
     // console.log(id)
-    const image = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/user' })
+    const image = req.file && await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/user' })
     const data = {
       ...req.body,
       id,
-      photo: image.secure_url
+      photo: image ? image.secure_url : ''
     }
     console.log(data)
     await updateProfile(data)
