@@ -46,6 +46,18 @@ const cartController = {
       console.log(error)
       next(errorMessage)
     }
+  },
+
+  deleteCart: async (req, res, next) => {
+    try {
+      const id = req.params.id
+      console.log(id)
+      await cartModel.deleteCart(id)
+      response(res, null, 200, 'DELETE DATA SUCCESS')
+    } catch (error) {
+      console.log(error)
+      next(errorMessage)
+    }
   }
 }
 

@@ -48,6 +48,19 @@ const cartModel = {
         }
       })
     })
+  },
+
+  deleteCart: (id) => {
+    console.log(id)
+    return new Promise((resolve, reject) => {
+      pool.query('DELETE FROM cart where id = $1', [id], (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(err)
+        }
+      })
+    })
   }
 }
 
