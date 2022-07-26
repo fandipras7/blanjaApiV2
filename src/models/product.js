@@ -16,22 +16,29 @@ const modelsProduct = {
       products.price 
       FROM products WHERE products.stock >= ${1}`
 
-      console.log(searchProduct);
+      console.log(searchProduct)
       if (searchProduct) {
         sql += ` AND products.name ILIKE '%${searchProduct}%'`
       }
 
+      console.log(sortby)
+
       if (sortby) {
-        sql += ` ORDER BY products.${sortby}`
+        console.log(sortby)
+        sql += ` ORDER BY ${sortby}`
       }
 
       if (sort) {
-        sql += ` ${sort}`
+        if (sort === '1') {
+          sql += ' DESC'
+        } else {
+          sql += ' ASC'
+        }
       }
 
       sql += ` Limit ${limit} OFFSET ${offset}`
 
-      console.log(sql);
+      console.log(sql)
       pool.query(sql, (err, result) => {
         if (!err) {
           resolve(result)
@@ -42,10 +49,22 @@ const modelsProduct = {
     })
   },
   selectById: (id) => {
+    console.log(id)
     return pool.query('SELECT products.*, category.name AS name_category FROM products JOIN category ON products.id_category = category.id WHERE products.id = $1', [id])
   },
-  insert: ({ name, brand, size, color, condition, stock, price, idCategory, photo, description }) => {
-    return pool.query('INSERT INTO products(name, brand, size, color, condition, stock, price, id_category, photo, description)VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [name, brand, size, color, condition, stock, price, idCategory, photo, description])
+  selectMyProudct: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.query('SELECT * from products where seller_id = $1', [id], (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(err)
+        }
+      })
+    })
+  },
+  insert: ({ name, brand, size, color, condition, stock, price, idCategory, photo, description, idSeller }) => {
+    return pool.query('INSERT INTO products(name, brand, size, color, condition, stock, price, id_category, photo, description, seller_id)VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [name, brand, size, color, condition, stock, price, idCategory, photo, description, idSeller])
   },
   update: ({ name, brand, size, color, condition, description, stock, price, idCategory, photo, id }) => {
     return pool.query(`UPDATE products SET 

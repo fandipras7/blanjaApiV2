@@ -9,8 +9,10 @@ const cartController = {
     try {
       const id = uuidv4()
       const userId = req.user.id
+      console.log(userId)
       const { productId, qty } = req.body
-
+      console.log('ini id projek untuk keranjang');
+      console.log(productId)
       const data = {
         id,
         userId,
@@ -18,7 +20,7 @@ const cartController = {
         qty
       }
 
-      const checkId = await cartModel.checkProductId(data.productId)
+      const checkId = await cartModel.checkProductId(data.productId, data.userId)
       //   console.log(checkId.rowCount)
       if (checkId.rowCount) {
         const cart = checkId.rows[0]

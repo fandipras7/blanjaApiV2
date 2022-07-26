@@ -2,6 +2,8 @@ const pool = require('../config/db')
 
 const cartModel = {
   createCart: ({ id, userId, productId, qty }) => {
+    console.log('ini yang ditambah ke cart')
+    console.log(`id ${id}, userId ${userId}, ${productId} ${qty}`)
     return new Promise((resolve, reject) => {
       pool.query('INSERT INTO cart(id, user_id, product_id, qty)VALUES($1, $2, $3, $4)', [id, userId, productId, qty], (err, result) => {
         if (!err) {
@@ -26,9 +28,9 @@ const cartModel = {
       })
     })
   },
-  checkProductId: (id) => {
+  checkProductId: (productId, userId) => {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM cart where cart.product_id = $1', [id], (err, result) => {
+      pool.query('SELECT * FROM cart where cart.product_id = $1 AND cart.user_id = $2', [productId, userId], (err, result) => {
         if (!err) {
           resolve(result)
         } else {

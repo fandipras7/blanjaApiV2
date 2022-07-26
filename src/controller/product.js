@@ -74,11 +74,15 @@ const productsController = {
       const limit = req.query.limit || 5
       const offset = (page - 1) * limit
 
-      const { search, sortby, sort } = req.query
+      const { search, sortBy, sort } = req.query
+      // console.log(sortby);
 
       const searchProduct = search || ''
-      const sortbyFilter = sortby || ''
+      const sortbyFilter = sortBy || ''
       const sortFilter = sort || ''
+
+      console.log('ini sort ' + sortFilter)
+      console.log('ini sort ' + sortbyFilter)
 
       const result = await modelsProduct.select(limit, offset, searchProduct, sortbyFilter, sortFilter)
       const { rows: [count] } = await modelsProduct.countProduct(searchProduct, sortbyFilter, sort)
@@ -99,6 +103,18 @@ const productsController = {
       next(errorMessage)
     }
   },
+
+  getMyProduct: async (req, res, next) => {
+    try {
+      const idSeller = req.user.id
+      const result = await modelProducts.selectMyProudct(idSeller)
+      response(res, result.rows, 200, 'GET MYPRODUCT SUCCESS')
+    } catch (error) {
+      console.log(error)
+      next(errorMessage)
+    }
+  },
+
   addData: async (req, res, next) => {
     try {
       // const type = req.file.originalname
@@ -108,13 +124,13 @@ const productsController = {
     // const photos = req.files.map((item) => {
     //   return `http://${req.get('host')}/img/${item.filename}`
     // })
-
+      const idSeller = req.user.id
       // console.log('isi dari photos')
       // console.log(photos.join(','))
       // const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
       const photo = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/product' })
       const { name, brand, size, color, condition, stock, price, idCategory, description } = req.body
-      console.log(name)
+      console.log('apakah isi data dari fe masuk')
       const data = {
         name,
         brand: brand || '',
@@ -125,7 +141,8 @@ const productsController = {
         condition,
         stock,
         price,
-        idCategory: idCategory || 2
+        idCategory: idCategory || 2,
+        idSeller
       }
 
       // if (type.includes('.jpg') || type.includes('.png')) {
@@ -137,9 +154,10 @@ const productsController = {
       // if (sizePhoto > 2000000) {
       //   return next(createError('Maksimal size 2mb'))
       // }
-
+      // console.log(data);
       modelProducts.insert(data)
         .then(() => {
+          console.log('cek apakah jalan')
           response(res, data, 201, 'Produk berhasil ditambahkan')
         })
         .catch((error) => {
@@ -155,7 +173,10 @@ const productsController = {
     try {
       const id = req.params.id
       // const photo = `http://${req.get('host')}/img/${req.file.filename}` || null
-      const photo = await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/product' })
+      let photo = null
+      if (req.file) {
+        photo = await (await cloudinary.uploader.upload(req.file.path, { folder: 'blanja/product' })).secure_url
+      }
       const { name, brand, size, color, condition, description, stock, price, idCategory } = req.body
       console.log(req.body)
       const data = {
@@ -167,7 +188,7 @@ const productsController = {
         description,
         stock,
         price,
-        photo: photo.secure_url,
+        photo,
         idCategory,
         id
       }
