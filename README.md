@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/fandipras7/telegram_web_app">
+  <a href="https://github.com/fandipras7/blanjaApiV2">
     <img src="https://res.cloudinary.com/dbpfwb5ok/image/upload/v1658821500/blanja/blanja_logo_laqxvt.png" alt="Logo" width="150px">
   </a>
 
