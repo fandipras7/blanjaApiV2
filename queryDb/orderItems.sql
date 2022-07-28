@@ -1,9 +1,9 @@
-CREATE TABLE order_items(
-    id BIGSERIAL NOT NULL PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
+CREATE TABLE order_item(
+    id varchar(122) NOT NULL,
+    order_id varchar(122) NOT NULL,
+    product_id varchar(122) NOT NULL,
     quantity INT NOT NULL,
-    created_at TIMESTAMP,
+    creted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifed_at TIMESTAMP
 );
 

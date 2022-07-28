@@ -52,6 +52,30 @@ const cartModel = {
     })
   },
 
+  updateCartStockV2: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.query('UPDATE cart set qty = (qty + 1) WHERE id = $1', [id], (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(err)
+        }
+      })
+    })
+  },
+
+  decreaseStock: (id) => {
+    return new Promise((resolve, reject) => {
+      pool.query('UPDATE cart set qty = (qty - 1) WHERE id = $1', [id], (err, result) => {
+        if (!err) {
+          resolve(result)
+        } else {
+          reject(err)
+        }
+      })
+    })
+  },
+
   deleteCart: (id) => {
     console.log(id)
     return new Promise((resolve, reject) => {

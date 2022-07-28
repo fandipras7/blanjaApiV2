@@ -1,9 +1,9 @@
 CREATE TABLE order_details(
-    id BIGSERIAL NOT NULL PRIMARY KEY,
-    users_id VARCHAR(64),
+    id varchar(122),
+    users_id VARCHAR(122),
     total DECIMAL NOT NULL,
     payment_id INT NOT NULL,
-    creted_at TIMESTAMP,
+    creted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP
 );
 

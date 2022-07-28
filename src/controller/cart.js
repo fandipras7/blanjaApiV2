@@ -50,6 +50,28 @@ const cartController = {
     }
   },
 
+  updateCart: async (req, res, next) => {
+    try {
+      const id = req.params.id
+      await cartModel.updateCartStockV2(id)
+      response(res, null, 200, 'ADD Stock Cart Success')
+    } catch (error) {
+      console.log(error)
+      next(errorMessage)
+    }
+  },
+
+  decreaseCart: async (req, res, next) => {
+    try {
+      const id = req.params.id
+      await cartModel.decreaseStock(id)
+      response(res, null, 200, 'Mengurangi stok berhasil')
+    } catch (error) {
+      console.log(error)
+      next(errorMessage)
+    }
+  },
+
   deleteCart: async (req, res, next) => {
     try {
       const id = req.params.id

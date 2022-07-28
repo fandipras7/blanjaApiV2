@@ -7,5 +7,7 @@ router
   .post('/', protect, cartController.addCart)
   .get('/', protect, cartController.getCart)
   .delete('/:id', protect, cartController.deleteCart)
+  .put('/add/:id', cartController.updateCart)
+  .put('/decrease/:id', cartController.decreaseCart)
 
 module.exports = router

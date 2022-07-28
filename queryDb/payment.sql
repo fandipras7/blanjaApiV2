@@ -1,10 +1,10 @@
 CREATE TABLE payment(
-    id BIGSERIAL NOT NULL,
-    order_id INT,
+    id varchar(122),
+    order_id varchar(122),
     amount INT NOT NULL,
     provider VARCHAR(64) NOT NULL,
     status VARCHAR(32) NOT NULL,
-    created_at TIMESTAMP,
+    creted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modifed_at TIMESTAMP
 );
 
