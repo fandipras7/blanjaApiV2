@@ -58,7 +58,7 @@ const modelOrderHistory = {
 
   getOrderDetail: (id) => {
     return new Promise((resolve, reject) => {
-      pool.query(`select payment.amount AS total_harga, payment.provider, products.name AS nama_barang, order_items.quantity, users.name
+      pool.query(`select payment.amount AS total_harga, payment.provider, products.name AS nama_barang, products.price, order_items.quantity, users.name
         from order_items inner join products ON order_items.product_id = products.id
         INNER join order_details on order_items.order_id = order_details.id
         INNER join payment ON order_details.payment_id = payment.id
