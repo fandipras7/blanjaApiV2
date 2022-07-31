@@ -46,7 +46,7 @@ const modelOrderHistory = {
 
   getMyPayment: (idUser) => {
     return new Promise((resolve, reject) => {
-      pool.query('SELECT * FROM PAYMENT where user_id = $1', [idUser], (err, result) => {
+      pool.query('SELECT * FROM PAYMENT where user_id = $1 ORDER BY creted_at DESC', [idUser], (err, result) => {
         if (!err) {
           resolve(result)
         } else {
