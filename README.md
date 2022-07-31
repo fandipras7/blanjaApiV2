@@ -10,7 +10,7 @@
   <h3 align="center">Blanja E-Commerce : Backend Blanja</h3>
 
   <p align="center">
-    Create a Node.js app for building realtime chat RESTful APIs using Express.
+    Create a Node.js app for building blanja e commerce RESTful APIs using Express.
     <br />
     <a href="#table-of-contents"><strong>Explore the docs »</strong></a>
     <br />
