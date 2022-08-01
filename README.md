@@ -89,7 +89,7 @@ git clone https://github.com/fandipras7/blanjaApiV2.git
 ```
 - Go To Folder Repo
 ```
-cd telegram_api
+cd blanjaApiV2
 ```
 - Install Module
 ```
