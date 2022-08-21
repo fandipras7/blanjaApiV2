@@ -3,3 +3,5 @@ CREATE TABLE cart (
     user_id VARCHAR(74),
     product_id VARCHAR(64)
 )
+
+-- cek
